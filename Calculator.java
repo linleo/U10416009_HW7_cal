@@ -16,7 +16,9 @@ public class Calculator extends Application
 	@Override
 	public void start(Stage primaryStage) 
 	{
+		//button
 		Button button[] = new Button[28];
+		//button name
 		String buttonName[] = {"MC", "MR", "MS", "M+", "M-",
 							   "←", "CE", "C", "±", "√",
 							   "7", "8", "9", "/", "%",
@@ -67,7 +69,7 @@ public class Calculator extends Application
 		textField.setAlignment(Pos.BASELINE_RIGHT);
 		pane.getChildren().add(textField);
 		
-		//button 
+		//to set button location 
 		for (int i = 0; i < 20; i++)
 		{
 			button[i] = new Button(buttonName[i]);
@@ -140,6 +142,7 @@ public class Calculator extends Application
 		primaryStage.setResizable(false); 
 		primaryStage.show();
 		
+		//button listener
 		for (int i = 0; i < 28; i++)
 		{
 			final int ii = i;
@@ -152,6 +155,7 @@ public class Calculator extends Application
 	double ans = 0, num = 0, lastNum = 0;
 	String text = "", lastOperator = "";
 	boolean add = false, sub = false, mul = false, div = false, rewrite = true, isClickNum = false;
+	//method of calculate answer
 	void calculate(String buttonName[], int i)
 	{
 		if (buttonName[i].equals("C"))
@@ -373,6 +377,7 @@ public class Calculator extends Application
 		}
 	}
 	
+	//method of operation
 	double doLastOperator()
 	{
 		if (lastOperator.equals("+"))
