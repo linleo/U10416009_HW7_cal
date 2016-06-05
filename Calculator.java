@@ -149,34 +149,29 @@ public class Calculator extends Application
 		}
 	}
 	
-	double num = 0, ans = 0, buf = 0;
-	String text = "";
-	boolean add = false, sub = false, mul = false, div = false, rewrite = true, fCEqual = true;
-	ArrayList<Integer> numList = new ArrayList<>();
+	double ans = 0, num = 0, lastNum = 0;
+	String text = "", lastOperator = "";
+	boolean add = false, sub = false, mul = false, div = false, rewrite = true, isClickNum = false;
 	void calculate(String buttonName[], int i)
 	{
 		if (buttonName[i].equals("C"))
 		{
 			textField.setText("0");
-			num = 0;
 			ans = 0;
+			num = 0;
 			add = false;
 			sub = false; 
 			mul = false;
 			div = false; 
 			rewrite = true; 
-			fCEqual = true;
+			isClickNum = false;
+			lastOperator = "";
 		}
 		else if (buttonName[i].equals("CE"))
 		{
 			textField.setText("0");
-		}				
-		else if (textField.getText().equals("0"))
-		{
-			textField.setText("");
-			text = textField.getText() + buttonName[i]; 
-			textField.setText(text);
-		}				
+			isClickNum = false;
+		}								
 		else if (buttonName[i].equals("←"))
 		{
 			if (textField.getText().length() == 1)
@@ -188,6 +183,7 @@ public class Calculator extends Application
 				text = textField.getText().substring(0,textField.getText().length()-1); 
 				textField.setText(text);
 			}
+			isClickNum = false;
 		}
 		else if (buttonName[i].equals("±"))
 		{
@@ -201,109 +197,150 @@ public class Calculator extends Application
 				text = "-" + textField.getText();
 				textField.setText(text);
 			}
+			isClickNum = false;
 		}
 		else if (buttonName[i].equals("√"))
 		{
-			num = Double.parseDouble(textField.getText());
-			num = Math.sqrt(num);
-			text = String.valueOf(num);
+			ans = Double.parseDouble(textField.getText());
+			ans = Math.sqrt(ans);
+			text = String.valueOf(ans);
 			textField.setText(text);		
+			isClickNum = false;
 		}
 		else if (buttonName[i].equals("1/x"))
 		{
-			num = Double.parseDouble(textField.getText());
-			num = 1 / num;
-			text = String.valueOf(num);
-			textField.setText(text);		
+			ans = Double.parseDouble(textField.getText());
+			ans = 1 / ans;
+			text = String.valueOf(ans);
+			textField.setText(text);	
+			isClickNum = false;			
 		}
 		else if (buttonName[i].equals("+"))
 		{
-			num = Double.parseDouble(textField.getText());
+			if (lastOperator.equals(""))
+			{
+				ans = Double.parseDouble(textField.getText());
+				lastOperator = "+";
+			}
+			else
+			{
+				if (isClickNum)
+				{
+					num = Double.parseDouble(textField.getText());
+					doLastOperator();
+					lastOperator = "+";
+				}
+			}
 			rewrite = true;
-			fCEqual = true;
 			add = true;
 			sub = false;
 			mul = false;
 			div = false;
+			isClickNum = false;
 		}
 		else if (buttonName[i].equals("-"))
 		{
-			num = Double.parseDouble(textField.getText());
+			if (lastOperator.equals(""))
+			{
+				ans = Double.parseDouble(textField.getText());
+				lastOperator = "-";
+			}
+			else
+			{
+				if (isClickNum)
+				{
+					num = Double.parseDouble(textField.getText());
+					doLastOperator();
+					lastOperator = "-";
+				}
+			}
 			rewrite = true;
-			fCEqual = true;
 			sub = true;
 			add = false;
 			mul = false;
 			div = false;
+			isClickNum = false;
 		}
 		else if (buttonName[i].equals("*"))
 		{
-			num = Double.parseDouble(textField.getText());
+			if (lastOperator.equals(""))
+			{
+				ans = Double.parseDouble(textField.getText());
+				lastOperator = "*";
+			}
+			else
+			{
+				if (isClickNum)
+				{
+					num = Double.parseDouble(textField.getText());
+					doLastOperator();
+					lastOperator = "*";
+				}
+			}
 			rewrite = true;
-			fCEqual = true;
 			mul = true;
 			add = false;
 			sub = false;
 			div = false;
+			isClickNum = false;
 		}
 		else if (buttonName[i].equals("/"))
 		{
-			num = Double.parseDouble(textField.getText());	
+			if (lastOperator.equals(""))
+			{
+				ans = Double.parseDouble(textField.getText());
+				lastOperator = "/";
+			}
+			else
+			{
+				if (isClickNum)
+				{
+					num = Double.parseDouble(textField.getText());
+					doLastOperator();
+					lastOperator = "/";
+				}
+			}
 			rewrite = true;
-			fCEqual = true;
 			div = true;
 			add = false;
 			sub = false;
 			mul = false;
+			isClickNum = false;
 		}
 		else if (buttonName[i].equals("="))
 		{
+			num = Double.parseDouble(textField.getText());
+			if (isClickNum)
+			{
+				lastNum = num;
+				isClickNum = false;
+			}
 			if (add)
 			{
-				if (fCEqual)
-				{
-					ans = Double.parseDouble(textField.getText());	
-					ans = num + ans;
-					text = String.valueOf(ans);
-					textField.setText(text);
-					fCEqual = false;
-				}
+				ans = ans + lastNum;
+				text = String.valueOf(ans);
+				textField.setText(text);
 			}
 			else if (sub)
 			{
-				if (fCEqual)
-				{
-					ans = Double.parseDouble(textField.getText());	
-					ans = num - ans;
-					text = String.valueOf(ans);
-					textField.setText(text);
-					fCEqual = false;
-				}
+				ans = ans - lastNum;
+				text = String.valueOf(ans);
+				textField.setText(text);
 			}
 			else if (mul)
 			{
-				if (fCEqual)
-				{
-					ans = Double.parseDouble(textField.getText());	
-					ans = num * ans;
-					text = String.valueOf(ans);
-					textField.setText(text);
-					fCEqual = false;
-				}
+				ans = ans * lastNum;
+				text = String.valueOf(ans);
+				textField.setText(text);
 			}
 			else if (div)
 			{
-				if (fCEqual)
-				{
-					ans = Double.parseDouble(textField.getText());	
-					ans = num / ans;
-					text = String.valueOf(ans);
-					textField.setText(text);
-					fCEqual = false;
-				}
+				ans = ans / lastNum;
+				text = String.valueOf(ans);
+				textField.setText(text);
 			}
 		}
-		else if (num != 0)
+		else if (ans != 0)
 		{
 			if (rewrite)
 			{
@@ -311,16 +348,58 @@ public class Calculator extends Application
 				textField.setText(text);
 				rewrite = false;
 			}
+			else if(buttonName[i].equals("0") || buttonName[i].equals("1") || buttonName[i].equals("2") || buttonName[i].equals("3") || buttonName[i].equals("4")||
+					buttonName[i].equals("5") || buttonName[i].equals("6") || buttonName[i].equals("7") || buttonName[i].equals("8") || buttonName[i].equals("9"))
+			{
+				text = textField.getText() + buttonName[i];
+				textField.setText(text);
+			}
+			isClickNum = true;
+		}
+		else if(buttonName[i].equals("0") || buttonName[i].equals("1") || buttonName[i].equals("2") || buttonName[i].equals("3") || buttonName[i].equals("4")||
+				buttonName[i].equals("5") || buttonName[i].equals("6") || buttonName[i].equals("7") || buttonName[i].equals("8") || buttonName[i].equals("9"))
+		{
+			if (textField.getText().equals("0"))
+			{
+				text = buttonName[i];
+				textField.setText(text);
+			}
 			else
 			{
 				text = textField.getText() + buttonName[i];
 				textField.setText(text);
 			}
+			isClickNum = true;
 		}
-		else
+	}
+	
+	double doLastOperator()
+	{
+		if (lastOperator.equals("+"))
 		{
-			text = textField.getText() + buttonName[i];
+			ans = ans + num;
+			text = String.valueOf(ans);
 			textField.setText(text);
 		}
+		else if (lastOperator.equals("-"))
+		{
+			ans = ans - num;
+			text = String.valueOf(ans);
+			textField.setText(text);			
+		}
+		else if (lastOperator.equals("*"))
+		{
+			ans = ans * num;
+			text = String.valueOf(ans);
+			textField.setText(text);			
+		}
+		else if (lastOperator.equals("/"))
+		{
+			ans = ans / num;
+			text = String.valueOf(ans);
+			textField.setText(text);			
+		}
+		
+		return ans;
 	}
 }
