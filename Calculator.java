@@ -176,6 +176,7 @@ public class Calculator extends Application
 		else if (buttonName[i].equals("CE"))
 		{
 			textField.setText("0");
+			counter = 0;
 			isClickNum = false;
 		}								
 		else if (buttonName[i].equals("←"))
